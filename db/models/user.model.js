@@ -15,8 +15,8 @@ const schema = new mongoose.Schema({
     phone: String,
     role: {
         type:String,
-        enums: ["admin","user"],
-        default: "User",
+        enum: ["admin","user"],
+        default: "user",
         lowercase:true
     },
     password:{

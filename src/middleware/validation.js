@@ -18,7 +18,7 @@ export const validation = (schema) =>{
             error.details.forEach(val =>{
                 errorList.push(val.message)
             });
-            next(new AppError(errorList, 401))
+            next(new AppError(errorList, 400))
         }
     }
 }  

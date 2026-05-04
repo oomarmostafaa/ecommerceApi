@@ -32,10 +32,11 @@ export const signIn = catchError(async (req, res, next) => {
 
 export const protectedRoutes = catchError(async(req,res,next) => {
     // 1- token 
-    let token = req.header('token')
+    let token = req.header('token') || req.headers.authorization?.split(' ')[1];
+    if(!token) return next(new AppError('you are not logged in', 401));
     // 2- verify token
     jwt.verify(token,process.env.tokenSecretKey,async(err,decoded) => {
-        if(err) return next(new AppError(err,401));
+        if(err) return next(new AppError(err.message,401));
         let user = await userModel.findById(decoded.id);
         if(!user) return next(new AppError("user not found",404));
         if(user.changePasswordAt) {

@@ -4,7 +4,7 @@
 import express from 'express';
 import { validation } from '../../middleware/validation.js';
 import { allowTo, protectedRoutes } from '../auth/controller/auth.controller.js';
-import { createCashOrder, createCheckoutURL, getAllOrders, getSpaificOrder } from './controller/order.controller.js';
+import { createCashOrder, createCheckoutURL, getAllOrders, getSpaificOrder, webhooks } from './controller/order.controller.js';
 import { createOrderVal } from './order.validation.js';
 const orderRoutes = express.Router();
 
@@ -21,5 +21,5 @@ orderRoutes.route("/")
 //         .patch(protectedRoutes,validation(QueryIdVal), removeItem)
 orderRoutes.get("/all", protectedRoutes,allowTo('admin'), getAllOrders)
 orderRoutes.post("/checkout/:id", protectedRoutes,createCheckoutURL)
-
+orderRoutes.get("/webhook",webhooks)
 export default orderRoutes;

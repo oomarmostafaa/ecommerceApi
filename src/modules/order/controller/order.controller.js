@@ -53,8 +53,8 @@ const createCashOrder = catchError(async(req,res,next) => {
 
 
 const getSpaificOrder = catchError(async(req,res,next) => {
-    let order = await orderModel.findOne({user:req.user._id}).populate('orderItems.product')
-    res.json({message :"Done", order})
+    let orders = await orderModel.find({user:req.user._id}).populate('orderItems.product')
+    res.json({message :"Done", orders})
 })
 
 const getAllOrders = catchError(async(req,res,next) => {
@@ -97,16 +97,12 @@ const createCheckoutURL = catchError(async(req,res,next) => {
 })
  
 
-const createdOnlineOrder = catchError(async(req, res) => {
+const webhooks = catchError(async(req, res, next) => {
     const sig = req.headers['stripe-signature'].toString();
   
-    let event;
-  
-    try {
-      event = stripeClient.webhooks.constructEvent(req.body, sig, "whsec_zgc4YoHYOWThFSUq2x02ZeMuruIFFX2U");
-    } catch (err) {
-        return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
+   
+      let event = stripeClient.webhooks.constructEvent(req.body, sig, "whsec_YdM2u1BS871TU3VMsbcU09yFI7kxChw2");
+   
   
     if(event.type == "checkout.session.completed") {
         const checkoutSessionCompleted = event.data.object;
@@ -157,7 +153,7 @@ export {
    getSpaificOrder,
    getAllOrders,
    createCheckoutURL,
-   createdOnlineOrder
+   webhooks
 
 }
 
