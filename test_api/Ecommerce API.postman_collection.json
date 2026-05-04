@@ -1,0 +1,1296 @@
+{
+  "info": {
+    "name": "E-Commerce API",
+    "_postman_id": "f2b389ba-3f74-4ef0-9866-5d0937b9c5f7",
+    "description": "Postman collection for the E-Commerce API project, including auth, users, products, cart, orders, and Stripe flow.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Omar Mostafa\",\n  \"email\": \"omar@example.com\",\n  \"password\": \"A1234\",\n  \"rePassword\": \"A1234\",\n  \"phone\": \"01001234567\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/signup"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.token) {",
+                  "    pm.environment.set('token', json.token);",
+                  "  }",
+                  "  if (json.user && json.user._id) {",
+                  "    pm.environment.set('user_id', json.user._id);",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sign In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"omar@example.com\",\n  \"password\": \"A1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/signin"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.token) {",
+                  "    pm.environment.set('token', json.token);",
+                  "  }",
+                  "  if (json.user && json.user._id) {",
+                  "    pm.environment.set('user_id', json.user._id);",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"A1234\",\n  \"newPassword\": \"B1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/changePassword/{{user_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"A1234\",\n  \"rePassword\": \"A1234\",\n  \"phone\": \"01001234567\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/{{user_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated User\",\n  \"phone\": \"01009876543\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/{{user_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/{{user_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Brands",
+      "item": [
+        {
+          "name": "Create Brand",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Example Brand",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{brand_image}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/brand"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Brands",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/brand"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Brand By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/brand/{{brand_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Brand",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Updated Brand",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{brand_image}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/brand/{{brand_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Brand",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/v1/brand/{{brand_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Example Category",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{category_image}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/category"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.addedCategory && json.addedCategory._id) {",
+                  "  pm.environment.set('category_id', json.addedCategory._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/category"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/category/{{category_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Updated Category",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{category_image}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/category/{{category_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/category/{{category_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Subcategories",
+      "item": [
+        {
+          "name": "Create Subcategory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Example Subcategory",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "{{category_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{subcategory_image}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/category/{{category_id}}/subCategory"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.addedSubCategory && json.addedSubCategory._id) {",
+                  "  pm.environment.set('subcategory_id', json.addedSubCategory._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Subcategories",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/subcategory"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Subcategory By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/subcategory/{{subcategory_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Subcategory",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Updated Subcategory",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "{{category_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "{{subcategory_image}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/subcategory/{{subcategory_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Subcategory",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/subcategory/{{subcategory_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Example Product\",\n  \"description\": \"A sample product description.\",\n  \"price\": 150,\n  \"priceAfterDiscount\": 120,\n  \"quantity\": 30,\n  \"category\": \"{{category_id}}\",\n  \"subCategory\": \"{{subcategory_id}}\",\n  \"brand\": \"{{brand_id}}\",\n  \"createdBy\": \"{{user_id}}\",\n  \"imageCover\": [\n    {\n      \"fieldname\": \"imageCover\",\n      \"originalname\": \"cover.jpg\",\n      \"encoding\": \"7bit\",\n      \"mimetype\": \"image/jpeg\",\n      \"destination\": \"uploads/\",\n      \"filename\": \"cover.jpg\",\n      \"path\": \"uploads/cover.jpg\",\n      \"size\": 200000\n    }\n  ],\n  \"images\": [\n    {\n      \"fieldname\": \"images\",\n      \"originalname\": \"image1.jpg\",\n      \"encoding\": \"7bit\",\n      \"mimetype\": \"image/jpeg\",\n      \"destination\": \"uploads/\",\n      \"filename\": \"image1.jpg\",\n      \"path\": \"uploads/image1.jpg\",\n      \"size\": 150000\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.added && json.added._id) {",
+                  "  pm.environment.set('product_id', json.added._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/products"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/{{product_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Updated Product Title",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated description text.",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "200",
+                  "type": "text"
+                },
+                {
+                  "key": "priceAfterDiscount",
+                  "value": "180",
+                  "type": "text"
+                },
+                {
+                  "key": "quantity",
+                  "value": "25",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "{{category_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "subCategory",
+                  "value": "{{subcategory_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "brand",
+                  "value": "{{brand_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "imageCover",
+                  "type": "file",
+                  "src": "{{product_cover_image}}"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": "{{product_image}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/{{product_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/{{product_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Coupons",
+      "item": [
+        {
+          "name": "Create Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SAVE20\",\n  \"discount\": 20,\n  \"expires\": \"2026-12-31T00:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/coupon"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.addedCoupon && json.addedCoupon._id) {",
+                  "  pm.environment.set('coupon_id', json.addedCoupon._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Coupons",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/coupon"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Coupon By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/coupon/{{coupon_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Coupon",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SAVE30\",\n  \"discount\": 30\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/coupon/{{coupon_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Coupon",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/v1/coupon/{{coupon_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Add Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"This product is excellent.\",\n  \"rating\": 5,\n  \"product\": \"{{product_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/review"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.review && json.review._id) {",
+                  "  pm.environment.set('review_id', json.review._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Reviews",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/review"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Review By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/review/{{review_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Review",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Review text updated.\",\n  \"rating\": 4\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/review/{{review_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Review",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/review/{{review_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Address",
+      "item": [
+        {
+          "name": "Add Address",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"street\": \"123 Example St\",\n  \"phone\": \"01001234567\",\n  \"city\": \"Cairo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/address"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Wishlist",
+      "item": [
+        {
+          "name": "Add To Wishlist",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product\": \"{{product_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/wishList"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove From Wishlist",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/wishList/{{product_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Add To Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product\": \"{{product_id}}\",\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/cart"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.cart && json.cart._id) {",
+                  "  pm.environment.set('cart_id', json.cart._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Logged-in Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/cart"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart Quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product\": \"{{product_id}}\",\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/cart"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/cart/{{cart_item_id}}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Apply Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"coupon\": \"SAVE20\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/cart/apply"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Cash Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shippingAddress\": {\n    \"street\": \"123 Example St\",\n    \"city\": \"Cairo\",\n    \"phone\": \"01001234567\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/order/{{cart_id}}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.order && json.order._id) {",
+                  "  pm.environment.set('order_id', json.order._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get User Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/order"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Orders (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/order/all"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Stripe Checkout Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shippingAddress\": {\n    \"street\": \"123 Example St\",\n    \"city\": \"Cairo\",\n    \"phone\": \"01001234567\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/order/checkout/{{cart_id}}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stripe Webhook",
+      "item": [
+        {
+          "name": "Webhook Listener",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Stripe-Signature",
+                "value": "{{stripe_signature}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"evt_test_webhook\",\n  \"object\": \"event\",\n  \"type\": \"checkout.session.completed\",\n  \"data\": {\n    \"object\": {\n      \"id\": \"cs_test_123\",\n      \"client_reference_id\": \"{{cart_id}}\",\n      \"customer_email\": \"omar@example.com\",\n      \"amount_total\": 15000\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/webhook"
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "user_id",
+      "value": ""
+    },
+    {
+      "key": "category_id",
+      "value": ""
+    },
+    {
+      "key": "subcategory_id",
+      "value": ""
+    },
+    {
+      "key": "brand_id",
+      "value": ""
+    },
+    {
+      "key": "product_id",
+      "value": ""
+    },
+    {
+      "key": "coupon_id",
+      "value": ""
+    },
+    {
+      "key": "review_id",
+      "value": ""
+    },
+    {
+      "key": "cart_item_id",
+      "value": ""
+    },
+    {
+      "key": "cart_id",
+      "value": ""
+    },
+    {
+      "key": "stripe_signature",
+      "value": ""
+    },
+    {
+      "key": "brand_image",
+      "value": "path/to/brand-image.jpg"
+    },
+    {
+      "key": "category_image",
+      "value": "path/to/category-image.jpg"
+    },
+    {
+      "key": "subcategory_image",
+      "value": "path/to/subcategory-image.jpg"
+    },
+    {
+      "key": "product_cover_image",
+      "value": "path/to/product-cover.jpg"
+    },
+    {
+      "key": "product_image",
+      "value": "path/to/product-image.jpg"
+    }
+  ]
+}
