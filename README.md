@@ -110,6 +110,16 @@ The API integrates with Stripe for online payments:
 - Webhook endpoint handles payment confirmation
 - Supports both cash and card payments
 
+## 🧪 Test with Postman
+
+To run the API tests immediately with Postman:
+1. Open Postman.
+2. Import `Ecommerce API.postman_collection.json`.
+3. Import `Ecommerce API.postman_environment.json` or create a new environment with the variable `base_url` set to `http://localhost:3001`.
+4. Select the imported environment.
+5. Run the requests in the collection. The `base_url` variable is already configured in the collection.
+
+
 ## 📁 Project Structure
 
 ```
