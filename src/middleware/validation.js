@@ -21,4 +21,4 @@ export const validation = (schema) =>{
             next(new AppError(errorList, 401))
         }
     }
-}
+}  
