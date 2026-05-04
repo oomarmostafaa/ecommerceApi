@@ -1,25 +1,23 @@
+import express from "express";
+import { validation } from "../../middleware/validation.js";
+import { allowTo, protectedRoutes } from "../auth/controller/auth.controller.js";
+import {
+  createCashOrder,
+  createCheckoutURL,
+  getAllOrders,
+  getSpaificOrder
+} from "./controller/order.controller.js";
 
-
-
-import express from 'express';
-import { validation } from '../../middleware/validation.js';
-import { allowTo, protectedRoutes } from '../auth/controller/auth.controller.js';
-import { createCashOrder, createCheckoutURL, getAllOrders, getSpaificOrder, webhooks } from './controller/order.controller.js';
-import { createOrderVal } from './order.validation.js';
 const orderRoutes = express.Router();
 
+orderRoutes.post("/:id", protectedRoutes, createCashOrder);
 
+orderRoutes.get("/", protectedRoutes, getSpaificOrder);
 
-orderRoutes.route("/:id")
-.post(protectedRoutes, validation(createOrderVal), createCashOrder)
-orderRoutes.route("/")
-//     .post(protectedRoutes,validation(addTocartVal), addToCart)
-    .get(protectedRoutes,getSpaificOrder)
-//     .patch(protectedRoutes,validation(updateQuVal), updateCartQuantity)
-// orderRoutes.post("/apply", protectedRoutes,applyCoupon)
-//     orderRoutes.route("/:id")
-//         .patch(protectedRoutes,validation(QueryIdVal), removeItem)
-orderRoutes.get("/all", protectedRoutes,allowTo('admin'), getAllOrders)
-orderRoutes.post("/checkout/:id", protectedRoutes,createCheckoutURL)
-orderRoutes.get("/webhook",webhooks)
+orderRoutes.get("/all", protectedRoutes, allowTo("admin"), getAllOrders);
+
+orderRoutes.post("/checkout/:id", protectedRoutes, createCheckoutURL);
+
+// ❌ مفيش webhook هنا نهائي
+
 export default orderRoutes;
