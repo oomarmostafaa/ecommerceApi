@@ -13,7 +13,7 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"))
 app.post('/webhook', express.raw({type: 'application/json'}), createdOnlineOrder);
 
-dbConnection()
+await dbConnection()
 allRoutes(app)
 
 app.get('/', (req, res) => res.send('Hello World!'))
